@@ -1,0 +1,6 @@
+-   id: fprettify
+    name: Format Fortran code
+    description: This hook applies fprettify to fortran files.
+    entry: fprettify
+    language: python
+    types_or: [f90, F90]
