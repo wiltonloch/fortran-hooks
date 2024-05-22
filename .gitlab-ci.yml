@@ -1,0 +1,26 @@
+# ICON OpenACC code beautifier
+#
+# ---------------------------------------------------------------
+# Copyright (C) 2004-2024, DWD, MPI-M, DKRZ, KIT, ETH, MeteoSwiss
+# Contact information: icon-model.org
+#
+# See AUTHORS.md for a list of authors
+# See LICENSES/ for license information
+# SPDX-License-Identifier: BSD-3-Clause
+# ---------------------------------------------------------------
+
+Unittest:
+  stage: test
+  script:
+    - python3 test.py
+
+  tags:
+    # choose python capable runner
+    - sphinx
+
+  # Run only for branches that are part of a merge request
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: never

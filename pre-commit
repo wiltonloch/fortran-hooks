@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# ICON OpenACC code beautifier
+#
+# ---------------------------------------------------------------
+# Copyright (C) 2004-2024, DWD, MPI-M, DKRZ, KIT, ETH, MeteoSwiss
+# Contact information: icon-model.org
+#
+# See AUTHORS.md for a list of authors
+# See LICENSES/ for license information
+# SPDX-License-Identifier: BSD-3-Clause
+# ---------------------------------------------------------------
+
+# A pre-commit hook script to apply the icon-openacc-beautifier to all staged files
+#
+# Instructions
+# ------------
+# Link or move to .git/hooks/pre-commit to enable.
+# E.g. from the icon directory:
+# ln -s ../icon-openacc-beautifier/pre-commit .git/hooks/pre-commit
+
+if [ -x "../icon-openacc-beautifier/main.py" ]; then
+    readarray -t STAGED_FILES <<< "$(git diff --cached --name-only --diff-filter=ACMR -- '*.?90')"
+    if [ -n "${STAGED_FILES[0]}" ]; then
+        UNSTAGED_CHANGES="$(git diff)"
+        if [ -n "${UNSTAGED_CHANGES}" ]; then
+            git stash push --staged
+            git stash push
+            git stash apply 1
+            ../icon-openacc-beautifier/main.py "${STAGED_FILES[@]}"
+            git add "${STAGED_FILES[@]}"
+            git stash pop
+            git stash drop 0
+        else
+            ../icon-openacc-beautifier/main.py "${STAGED_FILES[@]}"
+            git add "${STAGED_FILES[@]}"
+        fi
+    fi
+else
+    echo "============================= WARNING ============================="
+    echo "Error in pre-commit linter hook: Icon OpenACC beautifier not found!"
+    echo "Please place the linter in the same folder as icon."
+    echo "==================================================================="
+    exit 0
+fi
