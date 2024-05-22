@@ -4,3 +4,10 @@
     entry: fprettify
     language: python
     types: [fortran]
+
+-   id: icon-openacc-beautifier
+    name: Format Fortan OpenACC decorations
+    description: Formats OpenACC statements according to the ICON OpenACC coding style
+    entry: externals/icon-openacc-beautifier/main.py
+    language: script
+    types: [fortran]
